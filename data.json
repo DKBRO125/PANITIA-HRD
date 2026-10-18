@@ -1,0 +1,386 @@
+{
+  "app": "PANITIA HUB",
+  "version": 1,
+  "exportedAt": "2026-10-18T03:50:54.634Z",
+  "data": {
+    "activity": {
+      "name": "Program Sosial Kepanitiaan",
+      "status": "Persiapan"
+    },
+    "members": [
+      {
+        "id": "mb-1",
+        "name": "Raka Pratama",
+        "division": "PO",
+        "role": "Koordinator"
+      },
+      {
+        "id": "mb-2",
+        "name": "Salsabila Putri",
+        "division": "PO",
+        "role": "Anggota"
+      },
+      {
+        "id": "mb-3",
+        "name": "Nadia Safitri",
+        "division": "Sekretaris",
+        "role": "Koordinator"
+      },
+      {
+        "id": "mb-4",
+        "name": "Dimas Anggara",
+        "division": "Sekretaris",
+        "role": "Anggota"
+      },
+      {
+        "id": "mb-5",
+        "name": "Alya Ramadhani",
+        "division": "Acara",
+        "role": "Koordinator"
+      },
+      {
+        "id": "mb-6",
+        "name": "Fajar Nugroho",
+        "division": "Acara",
+        "role": "Anggota"
+      },
+      {
+        "id": "mb-7",
+        "name": "Putri Maharani",
+        "division": "Acara",
+        "role": "Anggota"
+      },
+      {
+        "id": "mb-8",
+        "name": "Bagas Wicaksono",
+        "division": "PDD",
+        "role": "Koordinator"
+      },
+      {
+        "id": "mb-9",
+        "name": "Citra Lestari",
+        "division": "PDD",
+        "role": "Anggota"
+      },
+      {
+        "id": "mb-10",
+        "name": "Rizky Maulana",
+        "division": "PDD",
+        "role": "Anggota"
+      },
+      {
+        "id": "mb-11",
+        "name": "Intan Permata",
+        "division": "Konsumsi",
+        "role": "Koordinator"
+      },
+      {
+        "id": "mb-12",
+        "name": "Yoga Saputra",
+        "division": "Konsumsi",
+        "role": "Anggota"
+      },
+      {
+        "id": "mb-13",
+        "name": "Hendra Kusuma",
+        "division": "Perkab",
+        "role": "Koordinator"
+      },
+      {
+        "id": "mb-14",
+        "name": "Maya Anggraini",
+        "division": "Perkab",
+        "role": "Anggota"
+      }
+    ],
+    "tasks": [
+      {
+        "id": "tk-15",
+        "name": "Membentuk grup koordinasi panitia",
+        "division": "PO",
+        "owner": "Salsabila Putri",
+        "deadline": "2026-10-18",
+        "status": "Selesai",
+        "progress": 100
+      },
+      {
+        "id": "tk-16",
+        "name": "Membagi jobdesk seluruh divisi",
+        "division": "PO",
+        "owner": "Raka Pratama",
+        "deadline": "2026-10-20",
+        "status": "Sedang Dikerjakan",
+        "progress": 80
+      },
+      {
+        "id": "tk-17",
+        "name": "Menyusun timeline persiapan kegiatan",
+        "division": "PO",
+        "owner": "Raka Pratama",
+        "deadline": "2026-10-21",
+        "status": "Sedang Dikerjakan",
+        "progress": 60
+      },
+      {
+        "id": "tk-18",
+        "name": "Menyusun daftar mitra dan pihak yang dihubungi",
+        "division": "PO",
+        "owner": "Salsabila Putri",
+        "deadline": "2026-10-28",
+        "status": "Belum Dimulai",
+        "progress": 0
+      },
+      {
+        "id": "tk-19",
+        "name": "Membuat notulen rapat pertama",
+        "division": "Sekretaris",
+        "owner": "Nadia Safitri",
+        "deadline": "2026-10-20",
+        "status": "Sedang Dikerjakan",
+        "progress": 40
+      },
+      {
+        "id": "tk-20",
+        "name": "Menyusun template presensi rapat",
+        "division": "Sekretaris",
+        "owner": "Dimas Anggara",
+        "deadline": "2026-10-22",
+        "status": "Menunggu Pemeriksaan",
+        "progress": 100
+      },
+      {
+        "id": "tk-21",
+        "name": "Mengumpulkan RAB dari setiap divisi",
+        "division": "Sekretaris",
+        "owner": "Nadia Safitri",
+        "deadline": "2026-11-05",
+        "status": "Belum Dimulai",
+        "progress": 0
+      },
+      {
+        "id": "tk-22",
+        "name": "Menyusun konsep dan tema kegiatan",
+        "division": "Acara",
+        "owner": "Alya Ramadhani",
+        "deadline": "2026-10-27",
+        "status": "Sedang Dikerjakan",
+        "progress": 35
+      },
+      {
+        "id": "tk-23",
+        "name": "Membuat draf rundown kegiatan",
+        "division": "Acara",
+        "owner": "Fajar Nugroho",
+        "deadline": "2026-11-03",
+        "status": "Belum Dimulai",
+        "progress": 0
+      },
+      {
+        "id": "tk-24",
+        "name": "Menentukan MC atau moderator",
+        "division": "Acara",
+        "owner": "Putri Maharani",
+        "deadline": "2026-11-10",
+        "status": "Belum Dimulai",
+        "progress": 0
+      },
+      {
+        "id": "tk-25",
+        "name": "Menyusun identitas visual dan poster",
+        "division": "PDD",
+        "owner": "Bagas Wicaksono",
+        "deadline": "2026-11-02",
+        "status": "Sedang Dikerjakan",
+        "progress": 25
+      },
+      {
+        "id": "tk-26",
+        "name": "Membuat rencana konten publikasi",
+        "division": "PDD",
+        "owner": "Citra Lestari",
+        "deadline": "2026-10-30",
+        "status": "Terhambat",
+        "progress": 20
+      },
+      {
+        "id": "tk-27",
+        "name": "Menyiapkan tim dokumentasi",
+        "division": "PDD",
+        "owner": "Rizky Maulana",
+        "deadline": "2026-11-12",
+        "status": "Belum Dimulai",
+        "progress": 0
+      },
+      {
+        "id": "tk-28",
+        "name": "Mendata kebutuhan konsumsi",
+        "division": "Konsumsi",
+        "owner": "Intan Permata",
+        "deadline": "2026-11-06",
+        "status": "Belum Dimulai",
+        "progress": 0
+      },
+      {
+        "id": "tk-29",
+        "name": "Survei vendor konsumsi",
+        "division": "Konsumsi",
+        "owner": "Yoga Saputra",
+        "deadline": "2026-11-09",
+        "status": "Sedang Dikerjakan",
+        "progress": 10
+      },
+      {
+        "id": "tk-30",
+        "name": "Mendata kebutuhan perlengkapan",
+        "division": "Perkab",
+        "owner": "Hendra Kusuma",
+        "deadline": "2026-10-31",
+        "status": "Sedang Dikerjakan",
+        "progress": 45
+      },
+      {
+        "id": "tk-31",
+        "name": "Mengecek ketersediaan fasilitas dan peminjaman barang",
+        "division": "Perkab",
+        "owner": "Maya Anggraini",
+        "deadline": "2026-11-13",
+        "status": "Belum Dimulai",
+        "progress": 0
+      }
+    ],
+    "meetings": [
+      {
+        "id": "rp-32",
+        "date": "2026-10-18",
+        "time": "19:30",
+        "agenda": "Rapat pertama: kickoff, pengenalan divisi, dan pembagian jobdesk",
+        "location": "Online (tautan dibagikan di grup)",
+        "status": "Terjadwal",
+        "notes": ""
+      },
+      {
+        "id": "rp-33",
+        "date": "2026-10-22",
+        "time": "19:30",
+        "agenda": "Rapat koordinasi: konsep kegiatan dan kebutuhan teknis",
+        "location": "Online (contoh)",
+        "status": "Terjadwal",
+        "notes": "Contoh jadwal — dapat diedit."
+      },
+      {
+        "id": "rp-34",
+        "date": "2026-10-25",
+        "time": "19:30",
+        "agenda": "Rapat evaluasi progres tiap divisi",
+        "location": "Online (contoh)",
+        "status": "Terjadwal",
+        "notes": "Contoh jadwal — dapat diedit."
+      }
+    ],
+    "timeline": [
+      {
+        "id": "tl-35",
+        "name": "Kickoff dan pembagian jobdesk",
+        "description": "Rapat pertama, pengenalan divisi, dan pembagian tugas.",
+        "owner": "PO",
+        "deadline": "2026-10-18",
+        "status": "Sedang Dikerjakan",
+        "progress": 70
+      },
+      {
+        "id": "tl-36",
+        "name": "Penyusunan konsep kegiatan",
+        "description": "Menentukan tema, tujuan, sasaran, dan bentuk program sosial.",
+        "owner": "Acara",
+        "deadline": "2026-10-27",
+        "status": "Sedang Dikerjakan",
+        "progress": 30
+      },
+      {
+        "id": "tl-37",
+        "name": "Penentuan kebutuhan teknis",
+        "description": "Mendata kebutuhan tempat, perlengkapan, dan dukungan teknis.",
+        "owner": "Perkab",
+        "deadline": "2026-11-03",
+        "status": "Belum Dimulai",
+        "progress": 0
+      },
+      {
+        "id": "tl-38",
+        "name": "Penyusunan rundown dan anggaran",
+        "description": "Menyusun rundown dan RAB berdasarkan masukan semua divisi.",
+        "owner": "Sekretaris",
+        "deadline": "2026-11-10",
+        "status": "Belum Dimulai",
+        "progress": 0
+      },
+      {
+        "id": "tl-39",
+        "name": "Persiapan publikasi",
+        "description": "Poster, konten media sosial, dan siaran pers.",
+        "owner": "PDD",
+        "deadline": "",
+        "status": "Belum Dijadwalkan",
+        "progress": 0
+      },
+      {
+        "id": "tl-40",
+        "name": "Pengadaan konsumsi dan perlengkapan",
+        "description": "Memesan konsumsi serta meminjam atau mengadakan perlengkapan.",
+        "owner": "Semua Divisi",
+        "deadline": "",
+        "status": "Belum Dijadwalkan",
+        "progress": 0
+      },
+      {
+        "id": "tl-41",
+        "name": "Pemeriksaan kesiapan",
+        "description": "Pengecekan akhir kesiapan seluruh divisi sebelum hari pelaksanaan.",
+        "owner": "PO",
+        "deadline": "",
+        "status": "Belum Dijadwalkan",
+        "progress": 0
+      },
+      {
+        "id": "tl-42",
+        "name": "Pelaksanaan kegiatan",
+        "description": "Hari pelaksanaan program sosial. Tanggal belum ditentukan.",
+        "owner": "Semua Divisi",
+        "deadline": "",
+        "status": "Belum Dijadwalkan",
+        "progress": 0
+      },
+      {
+        "id": "tl-43",
+        "name": "Evaluasi dan laporan akhir",
+        "description": "Rapat evaluasi, laporan kegiatan, dan laporan keuangan.",
+        "owner": "PO",
+        "deadline": "",
+        "status": "Belum Dijadwalkan",
+        "progress": 0
+      }
+    ],
+    "activities": [
+      {
+        "id": "ac-44",
+        "text": "Salsabila Putri membentuk grup koordinasi panitia",
+        "time": "2026-10-17T20:15:00"
+      },
+      {
+        "id": "ac-45",
+        "text": "Raka Pratama mulai membagi jobdesk seluruh divisi",
+        "time": "2026-10-17T21:40:00"
+      },
+      {
+        "id": "ac-46",
+        "text": "Dimas Anggara mengajukan template presensi untuk diperiksa",
+        "time": "2026-10-18T08:05:00"
+      },
+      {
+        "id": "ac-47",
+        "text": "Citra Lestari menandai rencana konten publikasi sebagai terhambat",
+        "time": "2026-10-18T09:30:00"
+      }
+    ]
+  }
+}
