@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10204a">
+  <meta name="description" content="PANITIA HUB — dashboard sederhana untuk memantau rapat, jobdesk, dan progres kerja kepanitiaan.">
+  <title>PANITIA HUB — Satu Ruang, Semua Progres</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310204a'/%3E%3Cpath d='M9 17l5 5 9-11' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">Lewati ke konten</a>
+
+  <div class="app">
+    <!-- ===== SIDEBAR (desktop) / BOTTOM NAV (mobile) ===== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M9 17l5 5 9-11"/></svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">PANITIA HUB</span>
+          <span class="brand-tag">Satu Ruang, Semua Progres</span>
+        </span>
+      </div>
+
+      <nav class="nav" aria-label="Navigasi utama">
+        <a class="nav-link" href="#dashboard" data-view="dashboard">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          <span class="lbl-long">Dashboard</span><span class="lbl-short">Dashboard</span>
+        </a>
+        <a class="nav-link" href="#jobdesk" data-view="jobdesk">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.5 1.5L7.5 5M3.5 12l1.5 1.5L7.5 11M3.5 18l1.5 1.5L7.5 17"/></svg>
+          <span class="lbl-long">Jobdesk Panitia</span><span class="lbl-short">Jobdesk</span>
+        </a>
+        <a class="nav-link" href="#rapat" data-view="rapat">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          <span class="lbl-long">Jadwal Rapat</span><span class="lbl-short">Rapat</span>
+        </a>
+        <a class="nav-link" href="#timeline" data-view="timeline">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><path d="M6 7v10M11 5h9M11 19h9M11 12h9"/></svg>
+          <span class="lbl-long">Timeline Kegiatan</span><span class="lbl-short">Timeline</span>
+        </a>
+        <a class="nav-link" href="#divisi" data-view="divisi">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16.5 14.2c2.6.2 4.5 2.4 4.5 5"/></svg>
+          <span class="lbl-long">Data Divisi</span><span class="lbl-short">Divisi</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <strong>Penyimpanan lokal</strong>
+        <p>Data tersimpan di browser ini saja (localStorage) dan tidak tersinkron antarperangkat atau antaranggota. Gunakan Ekspor/Impor JSON untuk berbagi data.</p>
+      </div>
+    </aside>
+
+    <div class="main">
+      <!-- ===== TOPBAR ===== -->
+      <header class="topbar">
+        <div class="topbar-title">
+          <span class="mobile-brand">PANITIA HUB</span>
+          <h1 id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" class="btn btn-ghost" data-action="print">Cetak</button>
+          <details class="menu" id="dataMenu">
+            <summary class="btn">Kelola Data</summary>
+            <div class="menu-panel">
+              <button type="button" class="menu-item" data-action="export">Ekspor data (JSON)</button>
+              <button type="button" class="menu-item" data-action="import">Impor data (JSON)</button>
+              <hr>
+              <button type="button" class="menu-item menu-danger" data-action="reset">Reset ke data awal</button>
+            </div>
+          </details>
+        </div>
+      </header>
+
+      <main class="content" id="content" tabindex="-1">
+        <p class="print-only" id="printMeta"></p>
+
+        <!-- ===== DASHBOARD ===== -->
+        <section class="view" id="view-dashboard" hidden>
+          <div id="dashboardContent"></div>
+        </section>
+
+        <!-- ===== JOBDESK ===== -->
+        <section class="view" id="view-jobdesk" hidden>
+          <div class="page-head">
+            <div>
+              <h2>Jobdesk Panitia</h2>
+              <p class="muted">Pantau tugas tiap divisi. Status dan progres bisa diubah langsung dari daftar.</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-action="task-add">+ Tambah Tugas</button>
+          </div>
+
+          <div class="card toolbar">
+            <div class="field grow">
+              <label class="sr-only" for="taskSearch">Cari tugas</label>
+              <input type="search" id="taskSearch" placeholder="Cari nama tugas atau penanggung jawab…" autocomplete="off">
+            </div>
+            <div class="field">
+              <label class="sr-only" for="filterDivision">Filter divisi</label>
+              <select id="filterDivision"></select>
+            </div>
+            <div class="field">
+              <label class="sr-only" for="filterStatus">Filter status</label>
+              <select id="filterStatus"></select>
+            </div>
+            <button type="button" class="btn" data-action="clear-filters">Reset filter</button>
+          </div>
+
+          <p class="result-count" id="taskCount" aria-live="polite"></p>
+          <div id="taskList"></div>
+        </section>
+
+        <!-- ===== RAPAT ===== -->
+        <section class="view" id="view-rapat" hidden>
+          <div class="page-head">
+            <div>
+              <h2>Jadwal Rapat</h2>
+              <p class="muted">Tanggal rapat tidak sama dengan tanggal pelaksanaan program sosial. Jadwal selain rapat pertama hanyalah contoh dan dapat diedit.</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-action="meeting-add">+ Tambah Rapat</button>
+          </div>
+          <div id="meetingList"></div>
+        </section>
+
+        <!-- ===== TIMELINE ===== -->
+        <section class="view" id="view-timeline" hidden>
+          <div class="page-head">
+            <div>
+              <h2>Timeline Kegiatan</h2>
+              <p class="muted">Tahapan persiapan hingga evaluasi. Tanggal pelaksanaan belum ditentukan, jadi tahap tanpa tanggal berstatus “Belum Dijadwalkan”.</p>
+            </div>
+          </div>
+          <p class="result-count" id="timelineSummary"></p>
+          <div id="timelineList"></div>
+        </section>
+
+        <!-- ===== DIVISI ===== -->
+        <section class="view" id="view-divisi" hidden>
+          <div class="page-head">
+            <div>
+              <h2>Data Divisi</h2>
+              <p class="muted">Tanggung jawab tiap divisi dan daftar anggotanya. Nama anggota di bawah hanyalah contoh; ubah sesuai susunan panitia.</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-action="member-add">+ Tambah Anggota</button>
+          </div>
+          <div id="divisionGrid"></div>
+        </section>
+
+        <p class="footer-note">
+          Data disimpan di <code>localStorage</code> browser ini. Data <strong>tidak</strong> tersinkron antarperangkat atau antaranggota — gunakan <em>Kelola Data → Ekspor/Impor JSON</em> untuk memindahkannya.
+        </p>
+      </main>
+    </div>
+  </div>
+
+  <!-- ===== DIALOG: TUGAS ===== -->
+  <dialog id="taskDialog" class="dialog" aria-labelledby="taskDialogTitle">
+    <form id="taskForm" novalidate>
+      <header class="dialog-head">
+        <h2 id="taskDialogTitle">Tambah Tugas</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Tutup">&times;</button>
+      </header>
+      <div class="dialog-body">
+        <div class="field">
+          <label for="taskName">Nama tugas</label>
+          <input id="taskName" maxlength="120" autocomplete="off" required>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="taskDivision">Divisi</label>
+            <select id="taskDivision"></select>
+          </div>
+          <div class="field">
+            <label for="taskOwner">Penanggung jawab</label>
+            <input id="taskOwner" list="ownerList" maxlength="60" autocomplete="off" required>
+            <datalist id="ownerList"></datalist>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="taskDeadline">Deadline</label>
+            <input type="date" id="taskDeadline" required>
+          </div>
+          <div class="field">
+            <label for="taskStatus">Status</label>
+            <select id="taskStatus"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="taskProgress">Progres: <output id="taskProgressOut" for="taskProgress">0%</output></label>
+          <input type="range" id="taskProgress" min="0" max="100" step="5" value="0">
+          <p class="hint">“Selesai” otomatis 100% dan “Belum Dimulai” otomatis 0%.</p>
+        </div>
+        <p class="form-error" id="taskError" role="alert" hidden></p>
+      </div>
+      <footer class="dialog-foot">
+        <button type="button" class="btn" data-close>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ===== DIALOG: RAPAT ===== -->
+  <dialog id="meetingDialog" class="dialog" aria-labelledby="meetingDialogTitle">
+    <form id="meetingForm" novalidate>
+      <header class="dialog-head">
+        <h2 id="meetingDialogTitle">Tambah Rapat</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Tutup">&times;</button>
+      </header>
+      <div class="dialog-body">
+        <div class="grid-2">
+          <div class="field">
+            <label for="meetingDate">Tanggal</label>
+            <input type="date" id="meetingDate" required>
+          </div>
+          <div class="field">
+            <label for="meetingTime">Waktu</label>
+            <input type="time" id="meetingTime" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="meetingAgenda">Agenda</label>
+          <input id="meetingAgenda" maxlength="160" autocomplete="off" required>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="meetingLocation">Lokasi / media rapat</label>
+            <input id="meetingLocation" maxlength="120" autocomplete="off" placeholder="Mis. Google Meet, ruang sekretariat">
+          </div>
+          <div class="field">
+            <label for="meetingStatus">Status</label>
+            <select id="meetingStatus"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="meetingNotes">Catatan hasil rapat</label>
+          <textarea id="meetingNotes" rows="4" maxlength="2000" placeholder="Ringkasan keputusan dan tindak lanjut (opsional)"></textarea>
+        </div>
+        <p class="form-error" id="meetingError" role="alert" hidden></p>
+      </div>
+      <footer class="dialog-foot">
+        <button type="button" class="btn" data-close>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ===== DIALOG: TIMELINE ===== -->
+  <dialog id="timelineDialog" class="dialog" aria-labelledby="timelineDialogTitle">
+    <form id="timelineForm" novalidate>
+      <header class="dialog-head">
+        <h2 id="timelineDialogTitle">Edit Tahap</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Tutup">&times;</button>
+      </header>
+      <div class="dialog-body">
+        <div class="field">
+          <label for="timelineName">Nama tahap</label>
+          <input id="timelineName" maxlength="120" autocomplete="off" required>
+        </div>
+        <div class="field">
+          <label for="timelineDesc">Deskripsi</label>
+          <textarea id="timelineDesc" rows="3" maxlength="400"></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="timelineOwner">Penanggung jawab</label>
+            <select id="timelineOwner"></select>
+          </div>
+          <div class="field">
+            <label for="timelineDeadline">Deadline</label>
+            <input type="date" id="timelineDeadline">
+            <p class="hint">Kosongkan jika belum ada tanggal pasti.</p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="timelineStatus">Status</label>
+          <select id="timelineStatus"></select>
+        </div>
+        <div class="field">
+          <label for="timelineProgress">Progres: <output id="timelineProgressOut" for="timelineProgress">0%</output></label>
+          <input type="range" id="timelineProgress" min="0" max="100" step="5" value="0">
+        </div>
+        <p class="form-error" id="timelineError" role="alert" hidden></p>
+      </div>
+      <footer class="dialog-foot">
+        <button type="button" class="btn" data-close>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ===== DIALOG: ANGGOTA ===== -->
+  <dialog id="memberDialog" class="dialog dialog-sm" aria-labelledby="memberDialogTitle">
+    <form id="memberForm" novalidate>
+      <header class="dialog-head">
+        <h2 id="memberDialogTitle">Tambah Anggota</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Tutup">&times;</button>
+      </header>
+      <div class="dialog-body">
+        <div class="field">
+          <label for="memberName">Nama</label>
+          <input id="memberName" maxlength="60" autocomplete="off" required>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="memberDivision">Divisi</label>
+            <select id="memberDivision"></select>
+          </div>
+          <div class="field">
+            <label for="memberRole">Peran</label>
+            <select id="memberRole"></select>
+          </div>
+        </div>
+        <p class="form-error" id="memberError" role="alert" hidden></p>
+      </div>
+      <footer class="dialog-foot">
+        <button type="button" class="btn" data-close>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ===== DIALOG: KONFIRMASI / PEMBERITAHUAN ===== -->
+  <dialog id="confirmDialog" class="dialog dialog-sm" aria-labelledby="confirmTitle">
+    <form method="dialog">
+      <div class="dialog-body">
+        <h2 id="confirmTitle"></h2>
+        <p id="confirmMessage" class="confirm-message"></p>
+      </div>
+      <footer class="dialog-foot">
+        <button type="submit" class="btn" value="cancel" id="confirmCancel">Batal</button>
+        <button type="submit" class="btn btn-danger" value="ok" id="confirmOk">Ya</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <input type="file" id="importFile" accept=".json,application/json" hidden>
+  <div class="toast-host" id="toastHost" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
