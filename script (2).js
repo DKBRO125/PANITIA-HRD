@@ -10,7 +10,7 @@
    4. Logika progres
    5. Render tiap halaman
    6. Form & aksi (tambah / edit / hapus)
-   7. Ekspor, impor, reset, cetak
+   7. Ekspor, impor, data.json bersama, reset, cetak
    8. Navigasi & event
    ========================================================= */
 (function () {
@@ -24,6 +24,9 @@
   const MAX_IMPORT_BYTES = 2 * 1024 * 1024; // batas ukuran berkas impor: 2 MB
   const MAX_ITEMS = 1000;                    // batas jumlah item per daftar saat impor
   const MAX_ACTIVITIES = 30;                 // jumlah aktivitas terbaru yang disimpan
+  const SEED_URL = 'data.json';                // data awal bersama (opsional) — diunggah admin ke GitHub
+  const SEED_ID_KEY = STORAGE_KEY + '.seedId'; // penanda versi data.json yang terakhir diproses browser ini
+  const SEED_TIMEOUT_MS = 4000;                // batas waktu menunggu data.json
 
   const TASK_STATUSES = ['Belum Dimulai', 'Sedang Dikerjakan', 'Menunggu Pemeriksaan', 'Selesai', 'Terhambat'];
   const TIMELINE_STATUSES = ['Belum Dijadwalkan', 'Belum Dimulai', 'Sedang Dikerjakan', 'Selesai', 'Terhambat'];
@@ -174,6 +177,7 @@
      ======================================================= */
   let state;
   let startupNotice = '';
+  let startedFresh = false; // true bila browser ini belum punya data tersimpan yang valid
   let storageWarned = false;
 
   function loadState() {
@@ -182,9 +186,10 @@
       raw = window.localStorage.getItem(STORAGE_KEY);
     } catch (err) {
       startupNotice = 'Penyimpanan browser tidak dapat diakses. Perubahan hanya bertahan selama halaman terbuka.';
+      startedFresh = true;
       return createDefaultData();
     }
-    if (raw === null) return createDefaultData();
+    if (raw === null) { startedFresh = true; return createDefaultData(); }
 
     try {
       const result = validateData(JSON.parse(raw));
@@ -194,6 +199,7 @@
       // Simpan salinan data rusak agar tidak hilang, lalu pakai data awal.
       try { window.localStorage.setItem(STORAGE_KEY + '.rusak', raw); } catch (e) { /* abaikan */ }
       startupNotice = 'Data tersimpan tidak valid, jadi data awal dimuat. (' + err.message + ')';
+      startedFresh = true;
       return createDefaultData();
     }
   }
@@ -1168,14 +1174,101 @@
     reader.readAsText(file);
   }
 
+  /* =======================================================
+     DATA AWAL BERSAMA (data.json)
+     -------------------------------------------------------
+     Admin cukup mengunggah berkas data.json (hasil "Ekspor data")
+     ke GitHub. Setiap browser membacanya lewat fetch():
+       • pengunjung baru  -> langsung memakai data.json;
+       • pengunjung lama  -> ditanya SEKALI bila data.json berubah
+         (dikenali dari kolom "exportedAt", atau "revision" bila
+         berkas diedit tangan);
+       • data.json tidak ada, atau index.html dibuka langsung dari
+         folder -> diam-diam memakai data contoh bawaan di atas.
+     ======================================================= */
+  function readSeedId() { try { return window.localStorage.getItem(SEED_ID_KEY); } catch (e) { return null; } }
+  function writeSeedId(id) { try { window.localStorage.setItem(SEED_ID_KEY, id); } catch (e) { /* abaikan */ } }
+
+  function seedIdOf(raw) {
+    if (isObject(raw)) {
+      if (typeof raw.exportedAt === 'string' && raw.exportedAt) return raw.exportedAt;
+      if (raw.revision !== undefined && raw.revision !== null) return String(raw.revision);
+    }
+    return 'tanpa-penanda';
+  }
+
+  // Mengembalikan { id, data } bila data.json ada dan valid; selain itu null.
+  async function fetchSeed() {
+    if (typeof window.fetch !== 'function' || window.location.protocol === 'file:') return null; // dibuka dari folder: browser memblokir fetch
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), SEED_TIMEOUT_MS) : null;
+    try {
+      const res = await fetch(SEED_URL + '?v=' + Date.now(), { cache: 'no-store', signal: controller ? controller.signal : undefined });
+      if (!res.ok) return null; // 404 = tidak ada data.json; itu normal
+      const raw = await res.json();
+      const result = validateData(raw);
+      if (!result.ok) {
+        toast('data.json tidak dipakai: ' + result.error, 'warn', 9000);
+        return null;
+      }
+      return { id: seedIdOf(raw), data: result.data };
+    } catch (err) {
+      if (err instanceof SyntaxError) toast('data.json bukan JSON yang valid, jadi diabaikan.', 'warn', 9000);
+      return null; // jaringan gagal atau dibuka dari file lokal: abaikan
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
+
+  function describeData(d) {
+    return d.tasks.length + ' tugas, ' + d.meetings.length + ' rapat, ' + d.timeline.length + ' tahap timeline, dan ' + d.members.length + ' anggota';
+  }
+
+  async function offerSeed(seed) {
+    const ok = await confirmAction({
+      title: 'Pakai data terbaru dari data.json?',
+      message: 'Berkas data.json di situs ini berisi ' + describeData(seed.data) + '.\n\nBila dipakai, seluruh data di browser ini akan DIGANTI, termasuk perubahan yang belum diekspor.',
+      confirmText: 'Ya, pakai data terbaru',
+      cancelText: 'Nanti saja',
+      danger: false
+    });
+    writeSeedId(seed.id); // ingat versi ini agar tidak ditanyakan terus-menerus
+    if (!ok) {
+      toast('Data tidak diganti. Anda bisa memuatnya kapan saja lewat Kelola Data.', 'info', 5000);
+      return;
+    }
+    state = seed.data;
+    logActivity('Data diperbarui dari data.json');
+    toast('Data diperbarui dari data.json.', 'success');
+    commit();
+  }
+
+  // Dipanggil saat halaman dibuka oleh pengunjung lama.
+  async function checkSeedUpdate() {
+    const seed = await fetchSeed();
+    if (seed && readSeedId() !== seed.id) offerSeed(seed);
+  }
+
+  // Dipanggil dari menu Kelola Data -> "Ambil data terbaru dari situs".
+  async function loadSeedManually() {
+    const seed = await fetchSeed();
+    if (!seed) {
+      showNotice('data.json tidak ditemukan',
+        'Berkas data.json tidak ada atau tidak valid di situs ini.\n\nFitur ini hanya bekerja bila situs dibuka lewat alamat web (mis. GitHub Pages), bukan dengan membuka index.html langsung dari folder.');
+      return;
+    }
+    offerSeed(seed);
+  }
+
   async function resetData() {
     const ok = await confirmAction({
       title: 'Reset ke data awal?',
-      message: 'Semua perubahan (tugas, rapat, timeline, anggota) akan dihapus dan diganti data contoh. Tindakan ini tidak dapat dibatalkan — ekspor JSON dulu bila perlu.',
+      message: 'Semua perubahan (tugas, rapat, timeline, anggota) akan dihapus dan diganti data awal (data.json dari situs bila ada, jika tidak data contoh bawaan). Tindakan ini tidak dapat dibatalkan — ekspor JSON dulu bila perlu.',
       confirmText: 'Ya, reset'
     });
     if (!ok) return;
-    state = createDefaultData();
+    const seed = await fetchSeed();
+    if (seed) { state = seed.data; writeSeedId(seed.id); } else { state = createDefaultData(); }
     toast('Data dikembalikan ke data awal.', 'success');
     commit();
   }
@@ -1246,6 +1339,7 @@
         case 'goto': window.location.hash = '#' + el.dataset.view; break;
         case 'export': closeMenu(); exportJSON(); break;
         case 'import': closeMenu(); $('#importFile').click(); break;
+        case 'seed': closeMenu(); loadSeedManually(); break;
         case 'reset': closeMenu(); resetData(); break;
         case 'print': printPage(); break;
         default: break; // task-status / task-progress ditangani di event change
@@ -1326,14 +1420,21 @@
     window.addEventListener('unhandledrejection', () => toast('Terjadi kesalahan saat memproses permintaan.', 'error', 6000));
   }
 
-  function init() {
+  async function init() {
     state = loadState();
     fillStaticOptions();
     bindEvents();
+    // Pengunjung baru: ambil data awal bersama (data.json) sebelum halaman digambar.
+    if (startedFresh) {
+      const seed = await fetchSeed();
+      if (seed) { state = seed.data; writeSeedId(seed.id); saveState(); }
+    }
     renderAll();
     showView(viewFromHash());
     if (startupNotice) toast(startupNotice, 'warn', 8000);
+    // Pengunjung lama: tawarkan data.json hanya bila isinya berubah sejak terakhir diproses.
+    if (!startedFresh) checkSeedUpdate();
   }
 
-  init();
+  init().catch((err) => { console.error(err); toast('Gagal memulai aplikasi: ' + err.message, 'error', 8000); });
 })();
